@@ -1,6 +1,7 @@
 import axios from 'axios'
 // 配置基准路径
 axios.defaults.baseURL = 'http://localhost:3000'
+localStorage.setItem('locaimg', axios.defaults.baseURL)
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
   // 在发送请求之前做些什么

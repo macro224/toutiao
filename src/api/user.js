@@ -9,3 +9,10 @@ export const postDenglu = (data) => {
     data
   })
 }
+
+// 用户详情
+export const getUser = (id) => {
+  return axios({
+    url: `/user/${id}`
+  })
+}

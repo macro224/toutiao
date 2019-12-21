@@ -43,7 +43,6 @@ export default {
     async login () {
       let res = await postDenglu(this.users)
       if (res.data.message === '登录成功') {
-        console.log(res)
         // 将令牌存储在本地
         localStorage.setItem('toutiao', res.data.data.token)
         // 跳转页面
