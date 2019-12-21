@@ -1,10 +1,17 @@
 <template>
-    <input :type="type" :value="value">
+    <input :type="type" :value="value" @input='handlerinput'>
 </template>
 
 <script>
 export default {
-  props: ['type', 'value']
+  props: ['type', 'value'],
+  methods: {
+    handlerinput (e) {
+      // 双向绑定
+      let value = e.target.value
+      this.$emit('input', value)
+    }
+  }
 }
 </script>
 
