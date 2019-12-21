@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 import Login from '@/views/Login.vue'
 import About from '@/views/About.vue'
+import editAbout from '@/views/editAbout.vue'
 import { Toast } from 'vant'
 
 Vue.use(VueRouter)
@@ -18,6 +19,11 @@ let router = new VueRouter({
       name: 'about',
       path: '/about/:id',
       component: About
+    },
+    {
+      name: 'editAbout',
+      path: '/editAbout/:id',
+      component: editAbout
     }
   ]
 })
