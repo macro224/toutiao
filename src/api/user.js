@@ -10,9 +10,27 @@ export const postDenglu = (data) => {
   })
 }
 
+// 注册
+export const postZhuce = data => {
+  return axios({
+    method: 'post',
+    url: '/register',
+    data
+  })
+}
+
 // 用户详情
 export const getUser = (id) => {
   return axios({
     url: `/user/${id}`
+  })
+}
+
+// 编辑用户信息
+export const postEdituser = (id, data) => {
+  return axios({
+    method: 'post',
+    url: `/user_update/${id}`,
+    data
   })
 }

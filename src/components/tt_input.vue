@@ -1,15 +1,21 @@
 <template>
-    <input :type="type" :value="value" @input='handlerinput'>
+    <input :type="type" :value="value" @input='handlerinput' @blur='fcblur'>
 </template>
 
 <script>
 export default {
-  props: ['type', 'value'],
+  props: ['type', 'value', 'rule', 'err_message'],
   methods: {
     handlerinput (e) {
       // 双向绑定
       let value = e.target.value
       this.$emit('input', value)
+    },
+    fcblur (e) {
+      let zz = new RegExp(this.rule)
+      if (this.rule && !zz.test(e.target.value)) {
+        this.$toast.fail(this.err_message)
+      }
     }
   }
 }

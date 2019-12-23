@@ -1,5 +1,5 @@
 <template>
-<div class="cell">
+<div class="cell" @click="fashe">
     <div class="left">{{left}}</div>
     <div class="right">
         {{right}}
@@ -10,7 +10,12 @@
 
 <script>
 export default {
-  props: ['left', 'right']
+  props: ['left', 'right'],
+  methods: {
+    fashe (e) {
+      this.$emit('click', e)
+    }
+  }
 }
 </script>
 

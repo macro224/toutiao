@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import Login from '@/views/Login.vue'
 import About from '@/views/About.vue'
 import editAbout from '@/views/editAbout.vue'
+import Zhuce from '@/views/Zhuce.vue'
 import { Toast } from 'vant'
 
 Vue.use(VueRouter)
@@ -24,6 +25,11 @@ let router = new VueRouter({
       name: 'editAbout',
       path: '/editAbout/:id',
       component: editAbout
+    },
+    {
+      name: 'zhuce',
+      path: '/zhuce',
+      component: Zhuce
     }
   ]
 })

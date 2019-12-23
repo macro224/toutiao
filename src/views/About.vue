@@ -7,7 +7,7 @@
           <div class="name">
             <span class="iconfont iconxingbienan"></span>{{user.nickname}}
           </div>
-          <div class="time">{{user.create_date}}</div>
+          <div class="time">{{user.create_date|dataFormat()}}</div>
         </div>
         <span class="iconfont iconjiantou1"></span>
       </div>
@@ -27,6 +27,7 @@
 import ttcell from '@/components/tt_cell.vue'
 import ttbutton from '@/components/tt_button.vue'
 import { getUser } from '@/api/user.js'
+import { dataFormat } from '@/utils/myfilers.js'
 export default {
   data () {
     return {
@@ -38,6 +39,9 @@ export default {
   },
   components: {
     ttcell, ttbutton
+  },
+  filters: {
+    dataFormat
   },
   async mounted () {
     // 根据用户id获取用户信息

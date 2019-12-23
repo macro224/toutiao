@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div id="app">
     <div class="container">
       <div class="close">
         <span class="iconfont iconicon-test"></span>
@@ -8,47 +8,55 @@
         <span class="iconfont iconnew"></span>
       </div>
       <div class="inputs">
-        <ttinput placeholder="请输入手机号" class="input" type="text" v-model="users.username"/>
-        <ttinput placeholder="密码" class="input" type="password" v-model="users.password" />
+        <ttinput
+          placeholder="手机号码"
+          class="input"
+          v-model="user.username"
+        />
+        <ttinput
+          placeholder="昵称"
+          class="input"
+          v-model="user.nickname"
+        />
+        <ttinput
+          placeholder="密码"
+          class="input"
+          type="password"
+          v-model="user.password"
+        />
       </div>
       <p class="tips">
-        没有账号？
-        <a href="#/zhuce" class>去注册</a>
+        有账号？
+        <a href="#/login" class>去登录</a>
       </p>
-      <ttbutton class="button" txt="登录" @click="login"></ttbutton>
+      <ttbutton class="button" txt="注册" @click="zhuce">注册</ttbutton>
     </div>
   </div>
 </template>
 
 <script>
-// 引入组件
-import ttbutton from '@/components/tt_button.vue'
+import { postZhuce } from '@/api/user.js'
 import ttinput from '@/components/tt_input.vue'
-// 引入接口
-import { postDenglu } from '@/api/user.js'
-
+import ttbutton from '@/components/tt_button.vue'
 export default {
+  components: {
+    ttinput, ttbutton
+  },
   data () {
     return {
-      users: {
-        username: '10000',
-        password: '123'
+      user: {
+        username: '',
+        nickname: '',
+        password: ''
       }
     }
   },
-  components: {
-    ttbutton, ttinput
-  },
   methods: {
-    async login () {
-      let res = await postDenglu(this.users)
-      if (res.data.message === '登录成功') {
-        // 将令牌存储在本地
-        localStorage.setItem('toutiao', res.data.data.token)
-        // 跳转页面
-        this.$router.push({ path: `/about/${res.data.data.user.id}` })
+    async zhuce () {
+      let res = await postZhuce(this.user)
+      if (res.data.message === '注册成功') {
+        this.$router.push({ name: 'login' })
       }
-      // 给出提示
       this.$toast.success(res.data.message)
     }
   }
