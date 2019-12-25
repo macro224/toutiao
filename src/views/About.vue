@@ -17,7 +17,7 @@
     <ttcell left="我的收藏" right="文章 / 视频"></ttcell>
     <ttcell left="设置" ></ttcell>
     <div class="box">
-      <ttbutton txt="进入首页"></ttbutton>
+      <ttbutton txt="进入首页" @click="$router.push({name:'index'})"></ttbutton>
       <ttbutton txt="退出" @click="tuichu"></ttbutton>
     </div>
   </div>

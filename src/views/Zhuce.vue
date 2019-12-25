@@ -12,6 +12,8 @@
           placeholder="手机号码"
           class="input"
           v-model="user.username"
+          :rule="/^\d{5,11}$/"
+          msg_err='手机号码输入不正确！'
         />
         <ttinput
           placeholder="昵称"
@@ -22,6 +24,8 @@
           placeholder="密码"
           class="input"
           type="password"
+          :rule="/^\d{3,}$/"
+          msg_err="密码输入格式不正确！"
           v-model="user.password"
         />
       </div>
@@ -53,11 +57,15 @@ export default {
   },
   methods: {
     async zhuce () {
-      let res = await postZhuce(this.user)
-      if (res.data.message === '注册成功') {
-        this.$router.push({ name: 'login' })
+      if (this.user.username.length > 4 && this.user.username.length < 12 && this.user.password.length > 2) {
+        let res = await postZhuce(this.user)
+        if (res.data.message === '注册成功') {
+          this.$router.push({ name: 'login' })
+        }
+        this.$toast.success(res.data.message)
+      } else {
+        this.$toast.success('格式不正确，请重新注册')
       }
-      this.$toast.success(res.data.message)
     }
   }
 }

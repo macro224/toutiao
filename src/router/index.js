@@ -5,12 +5,25 @@ import Login from '@/views/Login.vue'
 import About from '@/views/About.vue'
 import editAbout from '@/views/editAbout.vue'
 import Zhuce from '@/views/Zhuce.vue'
+import Index from '@/views/Index.vue'
+import Xinwen from '@/views/Xinwen.vue'
+
 import { Toast } from 'vant'
 
 Vue.use(VueRouter)
 
 let router = new VueRouter({
   routes: [
+    {
+      name: 'index',
+      path: '/',
+      component: Index
+    },
+    {
+      name: 'xinwen',
+      path: '/xinwen/:id',
+      component: Xinwen
+    },
     {
       name: 'login',
       path: '/login',

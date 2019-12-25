@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  props: ['type', 'value', 'rule', 'err_message'],
+  props: ['type', 'value', 'rule', 'msg_err'],
   methods: {
     handlerinput (e) {
       // 双向绑定
@@ -12,9 +12,12 @@ export default {
       this.$emit('input', value)
     },
     fcblur (e) {
-      let zz = new RegExp(this.rule)
-      if (this.rule && !zz.test(e.target.value)) {
-        this.$toast.fail(this.err_message)
+      if (this.rule && !this.rule.test(e.target.value)) {
+        this.$toast({
+          message: this.msg_err,
+          duration: 400,
+          type: 'fail'
+        })
       }
     }
   }
