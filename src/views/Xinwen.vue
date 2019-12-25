@@ -5,7 +5,9 @@
         <van-icon name="arrow-left back" @click="$router.back()" />
         <span class="iconfont iconnew new"></span>
       </div>
-      <span>关注</span>
+      <span @click="guanzhu" :class="{active:!xinwen.has_follow}">
+        {{xinwen.has_follow?'已关注':'关注'}}
+      </span>
     </div>
     <!-- 内容部分 -->
     <div class="detail">
@@ -19,8 +21,9 @@
       <video v-if="xinwen.type===2" :src="xinwen.content" controls></video>
 
       <div class="opt">
-        <span class="like">
-          <van-icon name="good-job-o" />{{xinwen.like_length}}
+        <!-- 点赞按钮 -->
+        <span class="like" @click="dianzan" :class="{active:xinwen.has_like}">
+          <van-icon name="good-job-o"  />{{xinwen.like_length}}
         </span>
         <span class="chat">
           <van-icon name="chat" class="w" />微信
@@ -46,12 +49,16 @@
       <div class="more" v-if="pinglunList.length!==0">更多跟帖</div>
       <p v-else>暂无精彩跟帖 ~ '_' ~</p>
     </div>
+    <ttcomment :xinwen="xinwen"></ttcomment>
   </div>
 </template>
 
 <script>
-import { getXinwen, getPinglun } from '@/api/xinwen.js'
+import { getXinwen, getPinglun, getDianzan } from '@/api/xinwen.js'
+import { getGuanzhu, getUnguanzhu } from '@/api/user.js'
 import { dataFormat } from '@/utils/myfilers.js'
+import ttcomment from '@/components/tt_comment.vue'
+
 export default {
   data () {
     return {
@@ -68,7 +75,7 @@ export default {
     if (res.status === 200) {
       this.xinwen = res.data.data
     }
-    // console.log(this.xinwen)
+    console.log(this.xinwen)
 
     // 获取评论列表
     let pl = await getPinglun(this.xinwen.id, { pageSize: 5 })
@@ -77,16 +84,54 @@ export default {
     }
     // console.log(this.pinglunList)
   },
+  methods: {
+    // 关注用户和取消关注用户
+    async guanzhu () {
+      let res
+      // 如果has_follow为true的时候就触发取消关注
+      if (this.xinwen.has_follow === true) {
+        res = await getUnguanzhu(this.xinwen.user.id)
+      } else {
+        res = await getGuanzhu(this.xinwen.user.id)
+      }
+      // 给出提示
+      this.$toast.success(res.data.message)
+      // 更改数据，刷新页面
+      this.xinwen.has_follow = !this.xinwen.has_follow
+    },
+    // 点赞
+    async dianzan () {
+      let res = await getDianzan(this.xinwen.id)
+      console.log(res)
+      if (res.data.message === '点赞成功') {
+        this.xinwen.like_length++
+      } else {
+        this.xinwen.like_length--
+      }
+      //   给出提示
+      this.$toast({
+        type: 'success',
+        message: res.data.message,
+        // 提示框显示时间
+        duration: 500
+      })
+      //   更新页面数据
+      this.xinwen.has_like = !this.xinwen.has_like
+    }
+  },
   // 添加过滤器--格式化日期
   filters: {
     dataFormat
+  },
+  components: {
+    ttcomment
   }
 }
 </script>
 
 <style lang='less' scoped>
 .articaldetail{
-  padding-bottom: 50px;
+  padding-bottom: 88px;
   background: #f2f2f2;
 }
 .header {
@@ -118,6 +163,7 @@ export default {
     border-radius: 15px;
     font-size: 13px;
     &.active {
+      border: 0;
       color: #fff;
       background-color: #f00;
     }

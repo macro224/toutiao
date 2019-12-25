@@ -23,3 +23,17 @@ export const getPinglun = (id, params) => {
     params
   })
 }
+
+// 收藏新闻
+export const getShoucang = (id) => {
+  return axios({
+    url: `/post_star/${id}`
+  })
+}
+
+// 点赞新闻
+export const getDianzan = (id) => {
+  return axios({
+    url: `/post_like/${id}`
+  })
+}
