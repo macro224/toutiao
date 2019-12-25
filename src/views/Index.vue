@@ -11,7 +11,7 @@
     <!-- 导航栏 -->
     <van-tabs v-model="active" swipeable >
         <van-tab :title="cate.name" v-for="cate in cateList" :key="cate.id">
-            <ttxinwen :xinwen="item" v-for="item in cate.xinwenList" :key="item.id"></ttxinwen>
+            <ttxinwen @click="$router.push({path:`/xinwen/${item.id}`})" :xinwen="item" v-for="item in cate.xinwenList" :key="item.id"></ttxinwen>
         </van-tab>
     </van-tabs>
 

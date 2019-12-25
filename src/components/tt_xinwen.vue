@@ -1,5 +1,5 @@
 <template>
-  <div class="single">
+  <div class="single" @click="fashe">
     <div class="left">
       <p class="content">{{xinwen.title}}</p>
       <p class="info">
@@ -7,7 +7,8 @@
         <span>有{{xinwen.comment_length}}人跟帖</span>
       </p>
     </div>
-    <img :src="xinwen.cover[0].url" alt />
+    <img v-if="xinwen.cover[0].url.indexOf('http')===0" :src="xinwen.cover[0].url" alt />
+    <img v-else :src="locaimg+xinwen.cover[0].url" alt />
   </div>
 </template>
 
@@ -17,6 +18,11 @@ export default {
   data () {
     return {
       locaimg: localStorage.getItem('locaimg')
+    }
+  },
+  methods: {
+    fashe () {
+      this.$emit('click')
     }
   }
 }

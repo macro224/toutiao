@@ -7,19 +7,20 @@
       </div>
       <span>关注</span>
     </div>
+    <!-- 内容部分 -->
     <div class="detail">
-      <div class="title">标题</div>
+      <div class="title">{{xinwen.title}}</div>
       <div class="desc">
-        <span>火星人</span> &nbsp;&nbsp;
-        <span>2019-9-9</span>
+        <span>{{xinwen.user && xinwen.user.nickname}}</span> &nbsp;&nbsp;
+        <span>{{xinwen.create_date | dataFormat()}}</span>
       </div>
-      <div class="content">
-        文章的内容：The axios TypeScript definitions have been updated to match the axios API and use the ES2015 module syntax.
-        Please use the following import statement to import axios in TypeScript:
-      </div>
+
+      <div class="content" v-if="xinwen.type===1" v-html="xinwen.content"></div>
+      <video v-if="xinwen.type===2" :src="xinwen.content" controls></video>
+
       <div class="opt">
         <span class="like">
-          <van-icon name="good-job-o" />点迁
+          <van-icon name="good-job-o" />{{xinwen.like_length}}
         </span>
         <span class="chat">
           <van-icon name="chat" class="w" />微信
@@ -29,31 +30,65 @@
     <!-- 精彩跟帖 -->
     <div class="keeps">
       <h2>精彩跟帖</h2>
-      <div class="item">
+      <!-- 评论列表 -->
+      <div class="item" v-for="item in pinglunList" :key="item.id">
         <div class="head">
-          <img src="../assets/logo.png" alt />
+          <img :src="locaimg+item.user.head_img" alt />
           <div>
-            <p>火星网友</p>
+            <p>{{item.user.nickname}}</p>
             <span>2小时前</span>
           </div>
           <span>回复</span>
         </div>
-        <div class="text">文章说得很有道理</div>
+        <div class="text">{{item.content}}</div>
       </div>
-      <div class="more">更多跟帖</div>
+      <!-- 更多按钮 -->
+      <div class="more" v-if="pinglunList.length!==0">更多跟帖</div>
+      <p v-else>暂无精彩跟帖 ~ '_' ~</p>
     </div>
   </div>
 </template>
 
 <script>
+import { getXinwen, getPinglun } from '@/api/xinwen.js'
+import { dataFormat } from '@/utils/myfilers.js'
 export default {
-  mounted () {
+  data () {
+    return {
+      locaimg: localStorage.getItem('locaimg'),
+      // 新闻信息
+      xinwen: '',
+      // 评论列表
+      pinglunList: ''
+    }
+  },
+  async mounted () {
     // 根据id获取文章的详情，实现文章详情的动态渲染
+    let res = await getXinwen(this.$route.params.id)
+    if (res.status === 200) {
+      this.xinwen = res.data.data
+    }
+    // console.log(this.xinwen)
+
+    // 获取评论列表
+    let pl = await getPinglun(this.xinwen.id, { pageSize: 5 })
+    if (pl.status === 200) {
+      this.pinglunList = pl.data.data
+    }
+    // console.log(this.pinglunList)
+  },
+  // 添加过滤器--格式化日期
+  filters: {
+    dataFormat
   }
 }
 </script>
 
 <style lang='less' scoped>
+.articaldetail{
+  padding-bottom: 50px;
+  background: #f2f2f2;
+}
 .header {
   padding: 0px 10px;
   height: 50px;
@@ -77,11 +112,15 @@ export default {
   }
   > span {
     padding: 5px 15px;
-    background-color: #f00;
-    color: #fff;
+    border: 1px solid #ccc;
+    color: #333;
     text-align: center;
     border-radius: 15px;
     font-size: 13px;
+    &.active {
+      color: #fff;
+      background-color: #f00;
+    }
   }
 }
 .detail {
@@ -103,6 +142,10 @@ export default {
     padding-bottom: 30px;
     width: 100%;
   }
+  video {
+    width: 100%;
+    margin-bottom: 10px;
+  }
 }
 .opt {
   display: flex;
@@ -116,6 +159,11 @@ export default {
     text-align: center;
     border: 1px solid #ccc;
     border-radius: 15px;
+  }
+  .like{
+    &.active{
+      color:red
+    }
   }
   .w {
     color: rgb(84, 163, 5);
@@ -172,6 +220,13 @@ export default {
     border-radius: 15px;
     margin: 20px auto;
     font-size: 13px;
+  }
+}
+
+/deep/.photo {
+  img {
+    width: 100% !important;
+    display: block;
   }
 }
 </style>
