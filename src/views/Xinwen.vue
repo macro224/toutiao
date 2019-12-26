@@ -49,7 +49,7 @@
       <div class="more" v-if="pinglunList.length!==0">更多跟帖</div>
       <p v-else>暂无精彩跟帖 ~ '_' ~</p>
     </div>
-    <ttcomment :xinwen="xinwen"></ttcomment>
+    <ttcomment :xinwen="xinwen" :isshow="true"></ttcomment>
   </div>
 </template>
 

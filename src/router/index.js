@@ -7,6 +7,7 @@ import editAbout from '@/views/editAbout.vue'
 import Zhuce from '@/views/Zhuce.vue'
 import Index from '@/views/Index.vue'
 import Xinwen from '@/views/Xinwen.vue'
+import Comment from '@/views/Comment.vue'
 
 import { Toast } from 'vant'
 
@@ -23,6 +24,11 @@ let router = new VueRouter({
       name: 'xinwen',
       path: '/xinwen/:id',
       component: Xinwen
+    },
+    {
+      name: 'comment',
+      path: '/comment/:id',
+      component: Comment
     },
     {
       name: 'login',

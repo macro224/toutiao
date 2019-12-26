@@ -2,14 +2,14 @@
   <div class="comment">
     <div class="addcomment" v-show='!isFocus'>
       <input type="text" placeholder="写跟帖" @focus="handlerFocus" />
-      <span class="comment">
+      <span v-if="isshow" class="comment" @click="$router.push({path:`/comment/${xinwen.id}`})">
         <i class="iconfont iconpinglun-"></i>
         <em>{{xinwen.comment_length}}</em>
       </span>
       <!-- 收藏图标 -->
-      <i class="iconfont iconshoucang" @click="shoucang" :class="{active:xinwen.has_star}"></i>
+      <i v-if="isshow" class="iconfont iconshoucang" @click="shoucang" :class="{active:xinwen.has_star}"></i>
       <!-- 分享图标 -->
-      <i class="iconfont iconfenxiang"></i>
+      <i v-if="isshow" class="iconfont iconfenxiang"></i>
     </div>
     <div class="inputcomment" v-show='isFocus'>
         <textarea  ref='commtext' rows="5"></textarea>
@@ -24,7 +24,7 @@
 <script>
 import { getShoucang } from '@/api/xinwen.js'
 export default {
-  props: ['xinwen'],
+  props: ['xinwen', 'isshow'],
   data () {
     return {
       isFocus: false
