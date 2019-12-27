@@ -12,22 +12,26 @@
       <i v-if="isshow" class="iconfont iconfenxiang"></i>
     </div>
     <div class="inputcomment" v-show='isFocus'>
-        <textarea  ref='commtext' rows="5"></textarea>
+        <textarea  ref='commtext' rows="5" :placeholder="placeholder"></textarea>
         <div>
-            <span>发送</span>
-            <span @click='isFocus=false'>取消</span>
+            <span @click="fabu">发布</span>
+            <span @click='fashe'>取消</span>
         </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getShoucang } from '@/api/xinwen.js'
+import { getShoucang, postPinglun } from '@/api/xinwen.js'
+
 export default {
-  props: ['xinwen', 'isshow'],
+  props: ['xinwen', 'isshow', 'dangepl'],
   data () {
     return {
-      isFocus: false
+      isFocus: false,
+      placeholder: '',
+      // 文章id
+      id: this.$route.params.id
     }
   },
   methods: {
@@ -50,6 +54,48 @@ export default {
       })
       //   更新页面数据
       this.xinwen.has_star = !this.xinwen.has_star
+    },
+    // 点击发布按钮
+    async fabu () {
+      let data = {
+        content: this.$refs.commtext.value
+      }
+      if (this.dangepl) {
+        data.parent_id = this.dangepl.id
+      }
+      // 判断输入框内不能为空
+      if (data.content !== '') {
+        let res = await postPinglun(this.id, data)
+        if (res.data.message === '评论发布成功') {
+          this.isFocus = false
+          this.$refs.commtext.value = ''
+          // 通知父组件刷新页面
+          this.$emit('shuaxin')
+        }
+        this.$toast.success(res.data.message)
+      } else {
+        this.$toast.fail('请输入内容！')
+      }
+    },
+    // 点击取消按钮
+    fashe () {
+      this.isFocus = false
+      this.placeholder = ''
+      this.$emit('quxiao')
+    }
+  },
+  // 监听单个评论数据
+  watch: {
+    dangepl () {
+      // 数据变化让评论框显示 并在评论框内填入回复对象的昵称
+      if (this.dangepl) {
+        this.isFocus = true
+        // 获取焦点
+        setTimeout(() => {
+          this.$refs.commtext.focus()
+        }, 1)
+        this.placeholder = '@' + this.dangepl.user.nickname
+      }
     }
   }
 }

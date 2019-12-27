@@ -5,15 +5,22 @@
         <span class="cname">{{pinglun.parent.user.nickname}}</span>
         <span>2小时前</span>
       </div>
-      <span>回复</span>
+      <span @click="fashe(pinglun.parent)">回复</span>
     </div>
     <div class="text">{{pinglun.parent.content}}</div>
+    <mycomment v-if="pinglun.parent.parent" @huifu="fashe" :pinglun="pinglun.parent"></mycomment>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['pinglun']
+  name: 'mycomment',
+  props: ['pinglun'],
+  methods: {
+    fashe (pinglun) {
+      this.$emit('huifu', pinglun)
+    }
+  }
 }
 </script>
 

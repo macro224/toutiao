@@ -24,6 +24,15 @@ export const getPinglun = (id, params) => {
   })
 }
 
+// 发布评论
+export const postPinglun = (id, data) => {
+  return axios({
+    method: 'post',
+    url: `/post_comment/${id}`,
+    data
+  })
+}
+
 // 收藏新闻
 export const getShoucang = (id) => {
   return axios({

@@ -13,14 +13,15 @@
             <p>{{item.user.nickname}}</p>
             <span>2小时前</span>
           </div>
-          <span>回复</span>
+          <span @click="huifu(item)">回复</span>
         </div>
         <div class="text">{{item.content}}</div>
-        <ttcommentitem v-if="item.parent" :pinglun="item"></ttcommentitem>
+        <!-- 二级评论---多级递归 -->
+        <ttcommentitem v-if="item.parent" :pinglun="item" @huifu="huifu"></ttcommentitem>
       </div>
     </div>
-    <!-- 底部栏 -->
-    <ttcomment :isshow="false"></ttcomment>
+    <!-- 底部栏 向子组件传递 dangepl单个评论数据 -->
+    <ttcomment :isshow="false" :dangepl="dangepl" @shuaxin="init" @quxiao="dangepl=null"></ttcomment>
   </div>
 </template>
 
@@ -35,17 +36,27 @@ export default {
     return {
       locaimg: localStorage.getItem('locaimg'),
       // 评论列表
-      pinglunList: ''
+      pinglunList: '',
+      // 单个评论数据
+      dangepl: {}
     }
   },
-  async mounted () {
-    // 获取评论列表
-    let pl = await getPinglun(this.$route.params.id)
-    if (pl.status === 200) {
-      this.pinglunList = pl.data.data
+  methods: {
+    huifu (item) {
+      this.dangepl = item
+    },
+    async init () {
+      // 获取评论列表
+      let pl = await getPinglun(this.$route.params.id)
+      if (pl.status === 200) {
+        this.pinglunList = pl.data.data
+      }
+      // 打印输出评论列表
+      console.log(this.pinglunList)
     }
-    // 打印输出评论列表
-    console.log(this.pinglunList)
+  },
+  mounted () {
+    this.init()
   },
   components: {
     ttheader, ttcomment, ttcommentitem
